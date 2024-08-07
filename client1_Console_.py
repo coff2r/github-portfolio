@@ -1,0 +1,213 @@
+import socket
+import datetime
+from _thread import start_new_thread
+
+# 言語オプション辞書 언어 옵션 사전
+languages = {
+    'en': {
+        'commands': '>> Commands <<',
+        'server_list': '>> Available Servers <<',
+        'select_server': 'Select a server by number: ',
+        'invalid_choice': 'Invalid choice. Exiting.',
+        'enter_id': 'Enter your user ID: ',
+        'connection_failed': 'Failed to connect to the server. Please check the host and port.',
+        'connected': '>> Connected to Server',
+        'now_disconnected': '>>now disconnected',
+        'current_time': '>>> {} <<<',
+        'help_list': '1. "/hl" or "/helplist" = Show Commands List\n2. "/ul" or "/userlist" = Show Connected User List\n3. "/ct" or "/currenttime" = Show Current Day and Time\n4. "/l" or "/lang" = Change language\n ex) /l(/lang) ko : Korean, /l(lang) en : English, /l(lang) jp : Japanese\n5. "/q" or "/quit" = Quit Client',
+        'language_changed': 'Language changed to {}.',
+        'unsupported_language': 'It starts with English, which is the default language, because there is no optional language.'
+    },
+    'jp': {
+        'commands': '>> コマンド <<',
+        'server_list': '>> 利用可能なサーバー <<',
+        'select_server': '番号でサーバーを選択: ',
+        'invalid_choice': '無効な選択です。終了します。',
+        'enter_id': 'ユーザーIDを入力してください: ',
+        'connection_failed': 'サーバーへの接続に失敗しました。ホストとポートを確認してください。',
+        'connected': '>> サーバーに接続しました',
+        'now_disconnected': '>> 切断しました',
+        'current_time': '>>> {} <<<',
+        'help_list': '1. "/hl" または "/helplist" = コマンドリストを表示\n2. "/ul" または "/userlist" = 接続ユーザーリストを表示\n3. "/ct" または "/currenttime" = 現在の日付と時間を表示\n4. "/l" または "/lang" = 言語変更\n ex) /l(/lang) ja : 韓国語 , /l(lang) en : 英語 , /l(lang) jp : 日本語\n5. "/q" または "/quit" = クライアントを終了',
+        'language_changed': '言語が {} に変更されました。',
+        'unsupported_language': '選択言語がないため、デフォルトの言語である英語で開始します。'
+    },
+    'kr': {
+        'commands': '>> 명령어 <<',
+        'server_list': '>> 사용 가능한 서버 <<',
+        'select_server': '번호로 서버를 선택하세요: ',
+        'invalid_choice': '잘못된 선택입니다. 종료합니다.',
+        'enter_id': '사용자 ID를 입력하세요: ',
+        'connection_failed': '서버에 연결할 수 없습니다. 호스트와 포트를 확인하세요.',
+        'connected': '>> 서버에 연결되었습니다',
+        'now_disconnected': '>> 연결 종료됨',
+        'current_time': '>>> {} <<<',
+        'help_list': '1. "/hl" 또는 "/helplist" = 명령어 목록 보기\n2. "/ul" 또는 "/userlist" = 연결된 사용자 목록 보기\n3. "/ct" 또는 "/currenttime" = 현재 날짜와 시간 보기\n4. "/l" 또는 "/lang" = 언어 변경\n    ex) /l(/lang) ko : 한국어 , /l(lang) en : 영어 , /l(lang) jp : 일본어\n5. "/q" 또는 "/quit" = 클라이언트 종료',
+        'language_changed': '언어가 {}(으)로 변경되었습니다.',
+        'unsupported_language': '선택 언어가 없기 때문에 기본 언어인 영어로 시작합니다.'
+    }
+}
+
+# C現在の言語設定 현재 언어 설정
+current_language = 'en'
+
+# 言語を変更する機能 언어를 변경하는 기능
+def set_language(language_code):
+    global current_language
+    if language_code in languages:
+        current_language = language_code
+        print(get_text('language_changed', language_code))
+    else:
+        print(get_text('unsupported_language', language_code))
+
+# 現在の言語に基づいてテキストを取得する 현재 언어를 기반으로 텍스트 검색
+def get_text(key, *args):
+    text = languages[current_language].get(key, key)
+    if args:
+        text = text.format(*args)
+    return text
+
+# 時間の機能 시간 기능
+def now_time():
+    now = datetime.datetime.now()
+    return now.strftime('[%H:%M] ')
+# 日付の機能 날짜 기능
+def now_date():
+    now = datetime.datetime.now()
+    return now.strftime('%Y-%m-%d')
+# 時間と日付の機能 시간과 날짜 기능
+def now_datetime():
+    now = datetime.datetime.now()
+    return now.strftime(' [%Y-%m-%d %H:%M] ')
+
+# コマンド管理 명령 관리
+# languages言語オプション辞書のhelp_listを呼び出して表示する Languages ​​언어 옵션 사전의 help list를 호출하여 표시
+def helplist():
+    print(get_text('commands'))
+    print(get_text('help_list'))
+
+# サーバーのリスト 서버 목록
+servers = [
+    # サーバーで定義されたサーバーHOSTとPORTをリスト化 서버에서 정의된 서버 HOST와 PORT를 리스트화
+    {'host': '127.0.0.1', 'port': 3000},
+    {'host': '127.0.0.1', 'port': 3001},
+    {'host': '127.0.0.1', 'port': 3002},
+    {'host': '127.0.0.1', 'port': 3003},
+    {'host': '127.0.0.1', 'port': 3004},
+]
+
+# サーバーリストを表示 서버 목록 보기
+def show_serverlist():
+    print(get_text('server_list'))
+    for i, server in enumerate(servers):
+        print(f"{i + 1}. Host: {server['host']}, Port: {server['port']}")
+
+# サーバーを選択 서버 선택
+def selectserver():
+    show_serverlist()
+    choice = int(input(get_text('select_server'))) - 1
+    if 0 <= choice < len(servers):
+        return servers[choice]
+    else:
+        print(get_text('invalid_choice'))
+        exit()
+
+# 初期言語の選択 초기 언어 선택
+def select_language():
+    print("Available languages: en (English), jp (Japanese), kr (Korean)")
+    language_code = input('Select your language by entering the language code: (basic language is english)')
+    set_language(language_code)
+
+# 開始時の言語選択 시작 시 언어 선택
+select_language()
+
+# サーバーとユーザーIDの選択 서버 및 사용자 ID 선택
+server = selectserver()
+HOST = server['host']
+PORT = server['port']
+
+# ユーザーidを入力してもらう 사용자 ID를 입력합니다.
+user_id = input(get_text('enter_id'))
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    client_socket.connect((HOST, PORT))
+except ConnectionRefusedError:
+    print(get_text('connection_failed'))
+    exit()
+
+client_socket.send(f"ID:[{user_id}]".encode())
+
+def receive_message(client_socket):
+    while True:
+        try:
+            data = client_socket.recv(1024).decode()
+            if not data:
+                break
+            # Display the received data
+            print(data)
+        except ConnectionResetError:
+            print(get_text('connection_failed'))
+            break
+    client_socket.close()
+
+# Start the receive message thread
+start_new_thread(receive_message, (client_socket,))
+
+print(get_text('connected'), now_datetime())
+helplist()
+
+while True:
+    message = input('')
+    if message == '/q' or message == '/quit':
+        print(get_text('now_disconnected'))
+        client_socket.send(message.encode())
+        break
+    elif message == '/ul' or message == '/userlist':
+        print("Sending user list request.")
+        client_socket.send(message.encode())
+    elif message == '/hl' or message == '/helplist':
+        helplist()
+    elif message == '/ct' or message == '/currenttime':
+        print(get_text('current_time', now_datetime()))
+    elif message.startswith('/l') or message.startswith('/lang'):
+        parts = message.split()
+        if len(parts) > 1:
+            set_language(parts[1])
+        else:
+            print(get_text('invalid_choice'))
+    else:
+        client_socket.send(message.encode())
+
+client_socket.close()
+
+
+
+start_new_thread(receive_message, (client_socket,))
+
+print(get_text('connected'), now_datetime())
+helplist()
+
+while True:
+    message = input('')
+    if message == '/q' or message == '/quit':
+        print(get_text('now_disconnected'))
+        client_socket.send(message.encode())
+        break
+    elif message == '/ul' or message == '/userlist':
+        print("Sending user list request.")
+        client_socket.send(message.encode())
+    elif message == '/hl' or message == '/helplist':
+        helplist()
+    elif message == '/ct' or message == '/currenttime':
+        print(get_text('current_time', now_datetime()))
+    elif message.startswith('/l') or message.startswith('/lang'):
+        parts = message.split()
+        if len(parts) > 1:
+            set_language(parts[1])
+        else:
+            print(get_text('invalid_choice'))
+    else:
+        client_socket.send(message.encode())
+
+client_socket.close()
