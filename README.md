@@ -22,4 +22,4 @@
 
 コマンド: /qまたは/quitでチャットから退出し、/ulまたは/userlistで接続中のユーザーのリストを取得することができます。
 
-> [プロジェクト詳細説明](https://github.com/kimphysicsman/retro_main)
+> [プロジェクト詳細説明](https://github.com/03kimu/github-portfolio/tree/main/Chatting)
