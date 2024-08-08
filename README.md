@@ -1,8 +1,9 @@
 # github-portfolio
 
-> 金載原(キムジェウォン) -  Portfolio
->
-># CHATTING SERVER
+# CHATTING PROGRAME
+> インフラ系(サーバー、ネットワーク)に興味を持つようになった理由は、チーム課題として制作していたゲームで
+> 作業を担当したチャットプログラムの問題のためでした。
+> 現在HITスクールの職業訓練コースで学んでいるpythonを利用して小さなプログラムを作ってみました。
 
 # 使用した技術の説明
 
@@ -22,4 +23,4 @@
 
 コマンド: /qまたは/quitでチャットから退出し、/ulまたは/userlistで接続中のユーザーのリストを取得することができます。
 
-> [プロジェクト詳細説明](https://github.com/03kimu/github-portfolio/tree/main/Chatting)
+> [プロジェクトプログラム詳細](https://github.com/03kimu/github-portfolio/tree/main/Chatting)
