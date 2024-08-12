@@ -2,7 +2,7 @@ import socket
 import datetime
 from _thread import start_new_thread
 
-# 言語オプション辞書 언어 옵션 사전
+# 言語オプション辞書
 languages = {
     'en': {
         'commands': '>> Commands <<',
@@ -48,10 +48,10 @@ languages = {
     }
 }
 
-# C現在の言語設定 현재 언어 설정
+# C現在の言語設定
 current_language = 'en'
 
-# 言語を変更する機能 언어를 변경하는 기능
+# 言語を変更する機能
 def set_language(language_code):
     global current_language
     if language_code in languages:
@@ -60,35 +60,35 @@ def set_language(language_code):
     else:
         print(get_text('unsupported_language', language_code))
 
-# 現在の言語に基づいてテキストを取得する 현재 언어를 기반으로 텍스트 검색
+# 現在の言語に基づいてテキストを取得する
 def get_text(key, *args):
     text = languages[current_language].get(key, key)
     if args:
         text = text.format(*args)
     return text
 
-# 時間の機能 시간 기능
+# 時間の機能
 def now_time():
     now = datetime.datetime.now()
     return now.strftime('[%H:%M] ')
-# 日付の機能 날짜 기능
+# 日付の機能 
 def now_date():
     now = datetime.datetime.now()
     return now.strftime('%Y-%m-%d')
-# 時間と日付の機能 시간과 날짜 기능
+# 時間と日付の機能 
 def now_datetime():
     now = datetime.datetime.now()
     return now.strftime(' [%Y-%m-%d %H:%M] ')
 
-# コマンド管理 명령 관리
-# languages言語オプション辞書のhelp_listを呼び出して表示する Languages ​​언어 옵션 사전의 help list를 호출하여 표시
+# コマンド管理 
+# languages言語オプション辞書のhelp_listを呼び出して表示する 
 def helplist():
     print(get_text('commands'))
     print(get_text('help_list'))
 
-# サーバーのリスト 서버 목록
+# サーバーのリスト
 servers = [
-    # サーバーで定義されたサーバーHOSTとPORTをリスト化 서버에서 정의된 서버 HOST와 PORT를 리스트화
+    # サーバーで定義されたサーバーHOSTとPORTをリスト化 
     {'host': '127.0.0.1', 'port': 3000},
     {'host': '127.0.0.1', 'port': 3001},
     {'host': '127.0.0.1', 'port': 3002},
@@ -96,13 +96,13 @@ servers = [
     {'host': '127.0.0.1', 'port': 3004},
 ]
 
-# サーバーリストを表示 서버 목록 보기
+# サーバーリストを表示
 def show_serverlist():
     print(get_text('server_list'))
     for i, server in enumerate(servers):
         print(f"{i + 1}. Host: {server['host']}, Port: {server['port']}")
 
-# サーバーを選択 서버 선택
+# サーバーを選択
 def selectserver():
     show_serverlist()
     choice = int(input(get_text('select_server'))) - 1
@@ -112,21 +112,21 @@ def selectserver():
         print(get_text('invalid_choice'))
         exit()
 
-# 初期言語の選択 초기 언어 선택
+# 初期言語の選択
 def select_language():
     print("Available languages: en (English), jp (Japanese), kr (Korean)")
     language_code = input('Select your language by entering the language code: (basic language is english)')
     set_language(language_code)
 
-# 開始時の言語選択 시작 시 언어 선택
+# 開始時の言語選択
 select_language()
 
-# サーバーとユーザーIDの選択 서버 및 사용자 ID 선택
+# サーバーとユーザーIDの選択
 server = selectserver()
 HOST = server['host']
 PORT = server['port']
 
-# ユーザーidを入力してもらう 사용자 ID를 입력합니다.
+# ユーザーidを入力してもらう 
 user_id = input(get_text('enter_id'))
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
