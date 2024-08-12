@@ -23,4 +23,6 @@
 
 コマンド: /qまたは/quitでチャットから退出し、/ulまたは/userlistで接続中のユーザーのリストを取得することができます。
 
-> [プロジェクトプログラム詳細](https://github.com/03kimu/github-portfolio/tree/main/Chatting)
+> [プロジェクトプログラム詳細](https://github.com/coff2r/github-portfolio/blob/main/Explain.md)
+> 
+> [ソース情報](https://github.com/03kimu/github-portfolio/tree/main/Chatting)
