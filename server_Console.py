@@ -2,7 +2,7 @@ import socket
 import datetime
 import threading
 
-# 定義された言語メッセージ 言語別メッセージ 정의된 언어 메시지 언어별 메시지
+# 定義された言語メッセージ 言語別メッセージ 
 messages = {
     'en': {
         'welcome': "Welcome",
@@ -51,8 +51,8 @@ messages = {
     }
 }
 
-clients = []  # すべてのクライアントソケットを保存するリスト 모든 클라이언트 소켓을 저장할 리스트
-users_id = {}  # クライアントソケットのユーザーIDの保存 클라이언트 소켓에 대한 유저 ID 저장
+clients = []  # すべてのクライアントソケットを保存するリスト 
+users_id = {}  # クライアントソケットのユーザーIDの保存
 
 def handle_client(client_socket, user_messages):
     global clients, users_id
@@ -85,16 +85,16 @@ def handle_client(client_socket, user_messages):
         except ConnectionResetError:
             break
 
-    # クライアント接続終了処理 클라이언트 연결 종료 처리
+    # クライアント接続終了処理
     client_socket.close()
     clients.remove(client_socket)
     del users_id[client_socket]
     print(">>>", now_datetime(), user_messages['disconnected'].format(user_id=user_id))
-    update_userlist(user_messages=user_messages)  # 言語別のメッセージ配信 언어별 메시지 전달
+    update_userlist(user_messages=user_messages)  # 言語別のメッセージ配信
 
 
 
-# 接続クライアントの数を管理 연결 클라이언트 수 관리
+# 接続クライアントの数を管理
 def update_userlist(requesting_client=None, user_messages=None):
     global clients, users_id
     userlist_message = user_messages['list']
@@ -131,15 +131,15 @@ def server(host, port, user_messages):
         threading.Thread(target=handle_client, args=(client_socket, user_messages)).start()
 
 def start_servers():
-    # サーバー設定 서버 설정
+    # サーバー設定
     servers = [
-        ('127.0.0.1', 9999),  # サーバーで使用するホストの IP アドレス、PORT 番号 서버에서 사용할 호스트의 IP 주소, PORT 번호
+        ('127.0.0.1', 9999),  # サーバーで使用するホストの IP アドレス、PORT 番号
         ('127.0.0.1', 3000),
         ('127.0.0.1', 3001),
         ('127.0.0.1', 3002),
         ('127.0.0.1', 3003),
         ('127.0.0.1', 3004),
-        # 他のサーバーアドレスとポートを追加できます。다른 서버 주소와 포트를 추가할 수 있습니다.
+        # 他のサーバーアドレスとポートを追加できます。
     ]
 
     print(messages['en']['select'])
@@ -150,7 +150,7 @@ def start_servers():
         choices = input(messages['en']['select'])
         selected_indices = [int(choice.strip()) - 1 for choice in choices.split(',') if choice.strip().isdigit()]
 
-        # 言語を選択 언어 선택
+        # 言語を選択
         language = input(messages['en']['language_prompt']).strip()
         if language not in messages:
             language = 'en'
