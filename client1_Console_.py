@@ -151,38 +151,7 @@ def receive_message(client_socket):
             break
     client_socket.close()
 
-# Start the receive message thread
-start_new_thread(receive_message, (client_socket,))
-
-print(get_text('connected'), now_datetime())
-helplist()
-
-while True:
-    message = input('')
-    if message == '/q' or message == '/quit':
-        print(get_text('now_disconnected'))
-        client_socket.send(message.encode())
-        break
-    elif message == '/ul' or message == '/userlist':
-        print("Sending user list request.")
-        client_socket.send(message.encode())
-    elif message == '/hl' or message == '/helplist':
-        helplist()
-    elif message == '/ct' or message == '/currenttime':
-        print(get_text('current_time', now_datetime()))
-    elif message.startswith('/l') or message.startswith('/lang'):
-        parts = message.split()
-        if len(parts) > 1:
-            set_language(parts[1])
-        else:
-            print(get_text('invalid_choice'))
-    else:
-        client_socket.send(message.encode())
-
-client_socket.close()
-
-
-
+# 受信メッセージスレッドを開始する
 start_new_thread(receive_message, (client_socket,))
 
 print(get_text('connected'), now_datetime())
