@@ -1,8 +1,8 @@
 # github-portfolio
 
 
-# 使用した技術の説明
+# 
 
 
-  # Project
+  # Python 個人 Project
 > - [チャットプログラム詳細](https://github.com/coff2r/github-portfolio/blob/main/Chatting.md)
